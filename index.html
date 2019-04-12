@@ -2,9 +2,212 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>纹理投影测试</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
+
+<div  style="background: #ff0000;position: fixed;left:40%;" id="test" > 全景过渡:4原装备件->5物有所值 </div>
+
+<script src="js/three.js"></script>
+<script type="text/javascript" src="js/OrbitControls.js"></script>
+<script type="text/javascript" src="js/Tween.js"></script>
+<script type="x-shader/x-vertex" id="vertexshader">
+
+        varying vec3 pos;
+
+        void main(void){
+
+        mat4 mvp = projectionMatrix * modelViewMatrix ;
+
+        pos = position.xyz;
+
+       // pos = vec3(-position.x,position.yz);
+
+        gl_Position  = mvp * vec4(pos,1.0);
+
+        }
+
+</script>
+
+<script type="x-shader/x-fragment" id="fragmentshader">
+
+
+        varying vec3 pos;
+
+        uniform samplerCube U_MainTexture;
+
+        void main(void){
+
+            gl_FragColor = textureCube(U_MainTexture,pos);//取观察点到面 的向量
+
+      }
+
+</script>
+
+
+<div id="WebGL-output"></div>
+
+<script>
+    var camera, scene, renderer, control;
+
+    function init() {
+
+        var uniforms;
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+       // camera.position.z = 40;
+         camera.position.x = -1;
+
+        // camera.lookAt(new THREE.Vector3(0,0,1))
+
+        control = new THREE.OrbitControls(camera);
+
+        control.rotateSpeed = -1;
+
+
+        var cubeGeo = new THREE.CubeGeometry(10, 10, 10);
+        var cubeGeo2 = new THREE.CubeGeometry(10, 10, 10);
+
+        var path = "./data/";
+        var format = '.jpg';
+        var urls = [
+            path + '4r' + format, path + '4l' + format,
+            path + '4u' + format, path + '4d' + format,
+            path + '4f' + format, path + '4b' + format
+        ];
+
+        var urls2 = [
+            path + '5r' + format, path + '5l' + format,
+            path + '5u' + format, path + '5d' + format,
+            path + '5f' + format, path + '5b' + format
+        ];
+
+        var uniforms2 = {
+            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls2 )  }
+        };
+
+        var shaderMaterial2 = new THREE.ShaderMaterial(
+            {
+                side: THREE.BackSide,
+                // side:THREE.DoubleSide,
+                uniforms: uniforms2,
+                vertexShader: document.getElementById('vertexshader').textContent,
+                fragmentShader: document.getElementById(('fragmentshader')).textContent,
+                depthTest: false
+                //transparent: true
+
+            });
+
+        uniforms = {
+            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls )  }
+        };
+
+        var shaderMaterial = new THREE.ShaderMaterial(
+            {
+                side: THREE.BackSide,
+                // side:THREE.DoubleSide,
+                uniforms: uniforms,
+                vertexShader: document.getElementById('vertexshader').textContent,
+                fragmentShader: document.getElementById(('fragmentshader')).textContent,
+                depthTest: false
+                //transparent: true
+
+            });
+        var cube = new THREE.Mesh(cubeGeo, shaderMaterial);
+        var cube2 = new THREE.Mesh(cubeGeo2, shaderMaterial2);
+        //  cube.rotation.y = -Math.PI;
+
+       // debugger
+
+
+        cube.scale.x = -1;
+        scene.add(cube);
+
+
+        cube2.scale.x = -1;
+        scene.add(cube2);
+
+       // cube.visible = false;
+
+        document.getElementById('test').addEventListener('click',function (ev) {
+
+         //   console.log(camera.position);
+
+          //  console.log(camera.getWorldDirection(new THREE.Vector3(0,0,0)));
+
+            new TWEEN.Tween(camera.position)
+                .to({
+                    x:2,
+                    y:0,
+                    z:0
+                },1000)
+                .easing(TWEEN.Easing.Linear.None)
+
+                .onUpdate(function (xhr) {
+                    control.target.set(xhr.x+0.01,0,0);
+
+
+
+                })
+                .onComplete( function () {
+
+                    console.log(camera.position)
+                        cube.visible = false;
+
+                        camera.position.set(-2,0,0);
+                        control.target.set(-1.9,0,0);
+
+                    new TWEEN.Tween(camera.position)
+                        .to({
+                            x:0,
+                            y:0,
+                            z:0
+                        },1000)
+                        .easing(TWEEN.Easing.Linear.None)
+
+                        .onUpdate(function (xhr) {
+                            control.target.set(xhr.x+0.01,0,0);
+
+                        }).start();
+
+
+                    }
+                ).start();
+
+
+        })
+
+        document.getElementById('WebGL-output').appendChild(renderer.domElement);
+        animate();
+    }
+
+    function rend() {
+        control.update();
+        renderer.render(scene, camera);
+    }
+
+    function animate() {
+
+        TWEEN.update();
+
+        rend();
+        requestAnimationFrame(animate);
+    }
+
+    init();
+</script>
 
 </body>
 </html>
