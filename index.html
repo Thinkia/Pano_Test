@@ -13,6 +13,7 @@
 <body>
 
 <div  style="background: #ff0000;position: fixed;left:40%;" id="test" > 全景过渡:4原装备件->5物有所值 </div>
+<div  style="background: #ff0000;position: fixed;" id="reset" > 重置 </div>
 
 <script src="js/three.js"></script>
 <script type="text/javascript" src="js/OrbitControls.js"></script>
@@ -185,6 +186,13 @@
 
                     }
                 ).start();
+
+
+        })
+
+        document.getElementById('reset').addEventListener('click',function (ev) {
+
+            cube.visible = true;
 
 
         })
