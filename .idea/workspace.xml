@@ -19,16 +19,15 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="236" column="69" lean-forward="false" selection-start-line="236" selection-start-column="69" selection-end-line="236" selection-end-column="69" />
+            <state relative-caret-position="320">
+              <caret line="243" column="26" lean-forward="false" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#3830#4904#0" expanded="false" />
-                <element signature="e#4499#4624#0" expanded="false" />
-                <element signature="e#4988#5035#0" expanded="false" />
-                <element signature="e#5124#6198#0" expanded="false" />
-                <element signature="e#6287#6334#0" expanded="false" />
+                <element signature="e#4577#5094#0" expanded="false" />
+                <element signature="e#5241#5288#0" expanded="false" />
+                <element signature="e#6029#6612#0" expanded="false" />
+                <element signature="e#6758#6805#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -92,6 +91,7 @@
       <find>control</find>
       <find>debugger</find>
       <find>tou</find>
+      <find>uniform</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -202,12 +202,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555049443639</updated>
-      <workItem from="1555049445000" duration="8500000" />
+      <workItem from="1555049445000" duration="10248000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8500000" />
+    <option name="totallyTimeSpent" value="10248000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -279,16 +279,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="236" column="69" lean-forward="false" selection-start-line="236" selection-start-column="69" selection-end-line="236" selection-end-column="69" />
+        <state relative-caret-position="320">
+          <caret line="243" column="26" lean-forward="false" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#3830#4904#0" expanded="false" />
-            <element signature="e#4499#4624#0" expanded="false" />
-            <element signature="e#4988#5035#0" expanded="false" />
-            <element signature="e#5124#6198#0" expanded="false" />
-            <element signature="e#6287#6334#0" expanded="false" />
+            <element signature="e#4577#5094#0" expanded="false" />
+            <element signature="e#5241#5288#0" expanded="false" />
+            <element signature="e#6029#6612#0" expanded="false" />
+            <element signature="e#6758#6805#0" expanded="false" />
           </folding>
         </state>
       </provider>

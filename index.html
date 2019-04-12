@@ -43,9 +43,11 @@
 
         uniform samplerCube U_MainTexture;
 
+        uniform float alpha;
+
         void main(void){
 
-            gl_FragColor = textureCube(U_MainTexture,pos);//取观察点到面 的向量
+            gl_FragColor =  vec4(textureCube(U_MainTexture,pos).rgb,alpha);//取观察点到面 的向量
 
       }
 
@@ -96,7 +98,10 @@
         ];
 
         var uniforms2 = {
-            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls2 )  }
+            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls2 )  },
+
+            alpha:{value:1.0}
+
         };
 
         var shaderMaterial2 = new THREE.ShaderMaterial(
@@ -106,13 +111,14 @@
                 uniforms: uniforms2,
                 vertexShader: document.getElementById('vertexshader').textContent,
                 fragmentShader: document.getElementById(('fragmentshader')).textContent,
-                depthTest: false
-                //transparent: true
+                depthTest: false,
+                transparent: true
 
             });
 
         uniforms = {
-            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls )  }
+            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls )  },
+            alpha:{value:1.0}
         };
 
         var shaderMaterial = new THREE.ShaderMaterial(
@@ -122,8 +128,8 @@
                 uniforms: uniforms,
                 vertexShader: document.getElementById('vertexshader').textContent,
                 fragmentShader: document.getElementById(('fragmentshader')).textContent,
-                depthTest: false
-                //transparent: true
+                depthTest: false,
+                transparent: true
 
             });
         var cube = new THREE.Mesh(cubeGeo, shaderMaterial);
@@ -155,13 +161,16 @@
                 .onUpdate(function (xhr) {
                     control.target.set(xhr.x+0.01,0,0);
 
+                    cube2.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+
                 })
                 .onComplete( function () {
 
                     //console.log(camera.position)
                         cube.visible = false;
+                    cube2.material.uniforms.alpha.value =1.0
 
-                        camera.position.set(-2,0,0);
+                  /*      camera.position.set(-2,0,0);
                         control.target.set(-1.9,0,0);
 
                     new TWEEN.Tween(camera.position)
@@ -175,7 +184,7 @@
                         .onUpdate(function (xhr) {
                             control.target.set(xhr.x+0.01,0,0);
 
-                        }).start();
+                        }).start();*/
 
 
                     }
@@ -205,36 +214,38 @@
                 .onUpdate(function (xhr) {
                     control.target.set(xhr.x+0.01,0,0);
 
+                    cube2.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+
                 })
                 .onComplete( function () {
 
-                    //console.log(camera.position)
+                        //console.log(camera.position)
                         cube.visible = false;
+                        cube2.material.uniforms.alpha.value =1.0
 
-                        camera.position.set(-2,0,0);
-                        control.target.set(-1.9,0,0);
+                        /*      camera.position.set(-2,0,0);
+                              control.target.set(-1.9,0,0);
 
-                    new TWEEN.Tween(camera.position)
-                        .to({
-                            x:0,
-                            y:0,
-                            z:0
-                        },1000)
-                        .easing(TWEEN.Easing.Linear.None)
+                          new TWEEN.Tween(camera.position)
+                              .to({
+                                  x:0,
+                                  y:0,
+                                  z:0
+                              },1000)
+                              .easing(TWEEN.Easing.Linear.None)
 
-                        .onUpdate(function (xhr) {
-                            control.target.set(xhr.x+0.01,0,0);
+                              .onUpdate(function (xhr) {
+                                  control.target.set(xhr.x+0.01,0,0);
 
-                        }).start();
+                              }).start();*/
 
 
                     }
                 ).start();
 
-
         });
 
-        document.getElementById('reset').addEventListener('touchstart',function (ev) {
+        document.getElementById('reset').addEventListener('click',function (ev) {
 
             cube.visible = true;
 
