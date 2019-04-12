@@ -144,10 +144,6 @@
 
         document.getElementById('test').addEventListener('click',function (ev) {
 
-         //   console.log(camera.position);
-
-          //  console.log(camera.getWorldDirection(new THREE.Vector3(0,0,0)));
-
             new TWEEN.Tween(camera.position)
                 .to({
                     x:2,
@@ -159,12 +155,10 @@
                 .onUpdate(function (xhr) {
                     control.target.set(xhr.x+0.01,0,0);
 
-
-
                 })
                 .onComplete( function () {
 
-                    console.log(camera.position)
+                    //console.log(camera.position)
                         cube.visible = false;
 
                         camera.position.set(-2,0,0);
@@ -188,14 +182,64 @@
                 ).start();
 
 
-        })
+        });
 
         document.getElementById('reset').addEventListener('click',function (ev) {
 
             cube.visible = true;
 
 
-        })
+        });
+
+
+        document.getElementById('test').addEventListener('touchstart',function (ev) {
+
+            new TWEEN.Tween(camera.position)
+                .to({
+                    x:2,
+                    y:0,
+                    z:0
+                },1000)
+                .easing(TWEEN.Easing.Linear.None)
+
+                .onUpdate(function (xhr) {
+                    control.target.set(xhr.x+0.01,0,0);
+
+                })
+                .onComplete( function () {
+
+                    //console.log(camera.position)
+                        cube.visible = false;
+
+                        camera.position.set(-2,0,0);
+                        control.target.set(-1.9,0,0);
+
+                    new TWEEN.Tween(camera.position)
+                        .to({
+                            x:0,
+                            y:0,
+                            z:0
+                        },1000)
+                        .easing(TWEEN.Easing.Linear.None)
+
+                        .onUpdate(function (xhr) {
+                            control.target.set(xhr.x+0.01,0,0);
+
+                        }).start();
+
+
+                    }
+                ).start();
+
+
+        });
+
+        document.getElementById('reset').addEventListener('touchstart',function (ev) {
+
+            cube.visible = true;
+
+
+        });
 
         document.getElementById('WebGL-output').appendChild(renderer.domElement);
         animate();
