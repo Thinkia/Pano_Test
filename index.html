@@ -80,7 +80,7 @@
         control.rotateSpeed = -1;
 
 
-        var cubeGeo = new THREE.CubeGeometry(10, 10, 10);
+        var cubeGeo = new THREE.CubeGeometry(11, 11, 11);
         var cubeGeo2 = new THREE.CubeGeometry(10, 10, 10);
 
         var path = "./data/";
@@ -96,6 +96,24 @@
             path + '5u' + format, path + '5d' + format,
             path + '5f' + format, path + '5b' + format
         ];
+
+
+        uniforms = {
+            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls )  },
+            alpha:{value:1.0}
+        };
+
+        var shaderMaterial = new THREE.ShaderMaterial(
+            {
+                side: THREE.BackSide,
+                // side:THREE.DoubleSide,
+                uniforms: uniforms,
+                vertexShader: document.getElementById('vertexshader').textContent,
+                fragmentShader: document.getElementById(('fragmentshader')).textContent,
+                depthTest: false,
+                transparent: true
+
+            });
 
         var uniforms2 = {
             U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls2 )  },
@@ -116,22 +134,6 @@
 
             });
 
-        uniforms = {
-            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls )  },
-            alpha:{value:1.0}
-        };
-
-        var shaderMaterial = new THREE.ShaderMaterial(
-            {
-                side: THREE.BackSide,
-                // side:THREE.DoubleSide,
-                uniforms: uniforms,
-                vertexShader: document.getElementById('vertexshader').textContent,
-                fragmentShader: document.getElementById(('fragmentshader')).textContent,
-                depthTest: false,
-                transparent: true
-
-            });
         var cube = new THREE.Mesh(cubeGeo, shaderMaterial);
         var cube2 = new THREE.Mesh(cubeGeo2, shaderMaterial2);
         //  cube.rotation.y = -Math.PI;
@@ -140,13 +142,12 @@
 
 
         cube.scale.x = -1;
-        scene.add(cube);
-
-
-        cube2.scale.x = -1;
         scene.add(cube2);
 
-       // cube.visible = false;
+        cube2.scale.x = -1;
+        scene.add(cube);
+
+        cube2.material.uniforms.alpha.value = 0.0;
 
         document.getElementById('test').addEventListener('click',function (ev) {
 
@@ -161,15 +162,18 @@
                 .onUpdate(function (xhr) {
                     control.target.set(xhr.x+0.01,0,0);
 
-                    cube2.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+                    cube.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+
+                    cube2.material.uniforms.alpha.value = 1.0 - ((2.0 - xhr.x )/3.0) ;
 
                 })
                 .onComplete( function () {
 
                     //console.log(camera.position)
-                        cube.visible = false;
-                    cube2.material.uniforms.alpha.value =1.0
 
+                    cube2.material.uniforms.alpha.value =1.0
+                    camera.position.set(0,0,0);
+                    control.target.set(0.01,0,0);
                   /*      camera.position.set(-2,0,0);
                         control.target.set(-1.9,0,0);
 
@@ -195,13 +199,14 @@
 
         document.getElementById('reset').addEventListener('click',function (ev) {
 
-            cube.visible = true;
+
+            cube.material.uniforms.alpha.value = 1.0;
+
+            cube2.material.uniforms.alpha.value = 0.0 ;
 
 
         });
-
-
-        document.getElementById('test').addEventListener('touchstart',function (ev) {
+        document.getElementById('test').addEventListener('click',function (ev) {
 
             new TWEEN.Tween(camera.position)
                 .to({
@@ -214,15 +219,18 @@
                 .onUpdate(function (xhr) {
                     control.target.set(xhr.x+0.01,0,0);
 
-                    cube2.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+                    cube.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+
+                    cube2.material.uniforms.alpha.value = 1.0 - ((2.0 - xhr.x )/3.0) ;
 
                 })
                 .onComplete( function () {
 
                         //console.log(camera.position)
-                        cube.visible = false;
-                        cube2.material.uniforms.alpha.value =1.0
 
+                        cube2.material.uniforms.alpha.value =1.0
+                        camera.position.set(0,0,0);
+                        control.target.set(0.01,0,0);
                         /*      camera.position.set(-2,0,0);
                               control.target.set(-1.9,0,0);
 
@@ -243,14 +251,67 @@
                     }
                 ).start();
 
-        });
-
-        document.getElementById('reset').addEventListener('click',function (ev) {
-
-            cube.visible = true;
-
 
         });
+
+        document.getElementById('test').addEventListener('touchstart',function (ev) {
+
+            new TWEEN.Tween(camera.position)
+                .to({
+                    x:2,
+                    y:0,
+                    z:0
+                },1000)
+                .easing(TWEEN.Easing.Linear.None)
+
+                .onUpdate(function (xhr) {
+                    control.target.set(xhr.x+0.01,0,0);
+
+                    cube.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+
+                    cube2.material.uniforms.alpha.value = 1.0 - ((2.0 - xhr.x )/3.0) ;
+
+                })
+                .onComplete( function () {
+
+                        //console.log(camera.position)
+
+                        cube2.material.uniforms.alpha.value =1.0
+                        camera.position.set(0,0,0);
+                        control.target.set(0.01,0,0);
+                        /*      camera.position.set(-2,0,0);
+                              control.target.set(-1.9,0,0);
+
+                          new TWEEN.Tween(camera.position)
+                              .to({
+                                  x:0,
+                                  y:0,
+                                  z:0
+                              },1000)
+                              .easing(TWEEN.Easing.Linear.None)
+
+                              .onUpdate(function (xhr) {
+                                  control.target.set(xhr.x+0.01,0,0);
+
+                              }).start();*/
+
+
+                    }
+                ).start();
+
+
+        });
+
+        document.getElementById('reset').addEventListener('touchstart',function (ev) {
+
+
+            cube.material.uniforms.alpha.value = 1.0;
+
+            cube2.material.uniforms.alpha.value = 0.0 ;
+
+
+        });
+
 
         document.getElementById('WebGL-output').appendChild(renderer.domElement);
         animate();
