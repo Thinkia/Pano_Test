@@ -73,33 +73,80 @@
        // camera.position.z = 40;
          camera.position.x = -1;
 
+
         // camera.lookAt(new THREE.Vector3(0,0,1))
 
         control = new THREE.OrbitControls(camera);
 
         control.rotateSpeed = -1;
+        control.target.set(-0.99999999,0,0);
 
 
-        var cubeGeo = new THREE.CubeGeometry(11, 11, 11);
+        var cubeGeo = new THREE.CubeGeometry(10, 10, 10);
         var cubeGeo2 = new THREE.CubeGeometry(10, 10, 10);
 
         var path = "./data/";
         var format = '.jpg';
+
         var urls = [
-            path + '4r' + format, path + '4l' + format,
-            path + '4u' + format, path + '4d' + format,
-            path + '4f' + format, path + '4b' + format
+            path + 'nx' + format, path + 'px' + format,
+            path + 'py' + format, path + 'ny' + format,
+            path + 'nz' + format, path + 'pz' + format
         ];
-
+        var urls1 = [
+            path + 'nx (1)' + format, path + 'px (1)' + format,
+            path + 'py (1)' + format, path + 'ny (1)' + format,
+            path + 'nz (1)' + format, path + 'pz (1)' + format
+        ];
         var urls2 = [
-            path + '5r' + format, path + '5l' + format,
-            path + '5u' + format, path + '5d' + format,
-            path + '5f' + format, path + '5b' + format
+            path + 'nx (2)' + format, path + 'px (2)' + format,
+            path + 'py (2)' + format, path + 'ny (2)' + format,
+            path + 'nz (2)' + format, path + 'pz (2)' + format
+        ];
+        var urls3 = [
+            path + 'nx (3)' + format, path + 'px (3)' + format,
+            path + 'py (3)' + format, path + 'ny (3)' + format,
+            path + 'nz (3)' + format, path + 'pz (3)' + format
         ];
 
+        var urls4 = [
+            path + 'nx (4)' + format, path + 'px (4)' + format,
+            path + 'py (4)' + format, path + 'ny (4)' + format,
+            path + 'nz (4)' + format, path + 'pz (4)' + format
+        ];
+        var urls5 = [
+            path + 'nx (5)' + format, path + 'px (5)' + format,
+            path + 'py (5)' + format, path + 'ny (5)' + format,
+            path + 'nz (5)' + format, path + 'pz (5)' + format
+        ];
+        var urls6 = [
+            path + 'nx (6)' + format, path + 'px (6)' + format,
+            path + 'py (6)' + format, path + 'ny (6)' + format,
+            path + 'nz (6)' + format, path + 'pz (6)' + format
+        ];
+        var urls7 = [
+            path + 'nx (7)' + format, path + 'px (7)' + format,
+            path + 'py (7)' + format, path + 'ny (7)' + format,
+            path + 'nz (7)' + format, path + 'pz (7)' + format
+        ];
+        var urls8 = [
+            path + 'nx (8)' + format, path + 'px (8)' + format,
+            path + 'py (8)' + format, path + 'ny (8)' + format,
+            path + 'nz (8)' + format, path + 'pz (8)' + format
+        ];
+
+        var cubeText = new THREE.CubeTextureLoader().load( urls)
+        var cubeText1 = new THREE.CubeTextureLoader().load( urls1 )
+        var cubeText2 = new THREE.CubeTextureLoader().load( urls2 )
+        var cubeText3 = new THREE.CubeTextureLoader().load( urls3 )
+        var cubeText4 = new THREE.CubeTextureLoader().load( urls4 )
+        var cubeText5 = new THREE.CubeTextureLoader().load( urls5 )
+        var cubeText6 = new THREE.CubeTextureLoader().load( urls6 )
+        var cubeText7 = new THREE.CubeTextureLoader().load( urls7 )
+        var cubeText8 = new THREE.CubeTextureLoader().load( urls8 )
 
         uniforms = {
-            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls )  },
+            U_MainTexture:{ value :  cubeText4  },
             alpha:{value:1.0}
         };
 
@@ -116,7 +163,7 @@
             });
 
         var uniforms2 = {
-            U_MainTexture:{ value :  new THREE.CubeTextureLoader().load( urls2 )  },
+            U_MainTexture:{ value :  cubeText5  },
 
             alpha:{value:1.0}
 
@@ -136,9 +183,8 @@
 
         var cube = new THREE.Mesh(cubeGeo, shaderMaterial);
         var cube2 = new THREE.Mesh(cubeGeo2, shaderMaterial2);
-        //  cube.rotation.y = -Math.PI;
 
-       // debugger
+
 
 
         cube.scale.x = -1;
@@ -148,54 +194,6 @@
         scene.add(cube);
 
         cube2.material.uniforms.alpha.value = 0.0;
-
-        document.getElementById('test').addEventListener('click',function (ev) {
-
-            new TWEEN.Tween(camera.position)
-                .to({
-                    x:2,
-                    y:0,
-                    z:0
-                },1000)
-                .easing(TWEEN.Easing.Linear.None)
-
-                .onUpdate(function (xhr) {
-                    control.target.set(xhr.x+0.01,0,0);
-
-                    cube.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
-
-                    cube2.material.uniforms.alpha.value = 1.0 - ((2.0 - xhr.x )/3.0) ;
-
-                })
-                .onComplete( function () {
-
-                    //console.log(camera.position)
-
-                    cube2.material.uniforms.alpha.value =1.0
-                    camera.position.set(0,0,0);
-                    control.target.set(0.01,0,0);
-                  /*      camera.position.set(-2,0,0);
-                        control.target.set(-1.9,0,0);
-
-                    new TWEEN.Tween(camera.position)
-                        .to({
-                            x:0,
-                            y:0,
-                            z:0
-                        },1000)
-                        .easing(TWEEN.Easing.Linear.None)
-
-                        .onUpdate(function (xhr) {
-                            control.target.set(xhr.x+0.01,0,0);
-
-                        }).start();*/
-
-
-                    }
-                ).start();
-
-
-        });
 
         document.getElementById('reset').addEventListener('click',function (ev) {
 
@@ -213,15 +211,32 @@
                     x:2,
                     y:0,
                     z:0
-                },1000)
+                },2000)
                 .easing(TWEEN.Easing.Linear.None)
 
                 .onUpdate(function (xhr) {
-                    control.target.set(xhr.x+0.01,0,0);
 
-                    cube.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+                    control.target.set(xhr.x+camera.getWorldDirection().x,xhr.y+camera.getWorldDirection().y,xhr.z+camera.getWorldDirection().z);
 
-                    cube2.material.uniforms.alpha.value = 1.0 - ((2.0 - xhr.x )/3.0) ;
+                    if(xhr.x >0)
+                    {
+                        cube.position.set(xhr.x,xhr.y,xhr.z);
+                        cube.material.uniforms.alpha.value = (2.0 - xhr.x )/3.0;
+                        cube2.material.uniforms.alpha.value = 1.0 - ((2.0 - xhr.x )/3.0) ;
+                        camera.fov  =50 ;
+                        camera.updateProjectionMatrix();
+
+                    }else
+                    {
+                        camera.fov  =-25*(xhr.x+1) +50 ;
+                        camera.updateProjectionMatrix();
+                    }
+
+                    cube2.position.set(xhr.x,xhr.y,xhr.z);
+
+
+
+
 
                 })
                 .onComplete( function () {
@@ -229,8 +244,8 @@
                         //console.log(camera.position)
 
                         cube2.material.uniforms.alpha.value =1.0
-                        camera.position.set(0,0,0);
-                        control.target.set(0.01,0,0);
+                      /*  camera.position.set(0,0,0);
+                        control.target.set(0.01,0,0);*/
                         /*      camera.position.set(-2,0,0);
                               control.target.set(-1.9,0,0);
 
@@ -277,8 +292,8 @@
                         //console.log(camera.position)
 
                         cube2.material.uniforms.alpha.value =1.0
-                        camera.position.set(0,0,0);
-                        control.target.set(0.01,0,0);
+                      //  camera.position.set(0,0,0);
+                     //   control.target.set(0.01,0,0);
                         /*      camera.position.set(-2,0,0);
                               control.target.set(-1.9,0,0);
 
