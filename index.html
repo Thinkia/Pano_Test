@@ -59,9 +59,9 @@
 <script>
     var camera, scene, renderer, control;
 
-    var curPos = 3;
-    var historyPos = 3;
-    var targetPos = 4;
+    var curPos = 4;
+    var historyPos = 4;
+    var targetPos = 5;
     var curBox = '';
     var textInfoGroup = new THREE.Group();
 
@@ -372,15 +372,25 @@
 
                 if(intersects[0].object.material.visible)
                 {
+
+                        let mat4 = new THREE.Matrix4();
+
+                        let quat = new THREE.Quaternion();
+
                         let num = intersects[0].object.userData.num;
 
                         let position = intersects[0].object.userData.position;
 
                         let object = intersects[0].object;
 
+                        mat4.lookAt(camera.position,position,new THREE.Vector3(0,1,0));
+
+                        quat.setFromRotationMatrix(mat4);
+
+
                         if(curBox=='cube')
                         {
-                          cube2.material.uniforms.U_MainTexture.value = object.userData.cubeText;
+                            cube2.material.uniforms.U_MainTexture.value = object.userData.cubeText;
                         }else {
                             cube.material.uniforms.U_MainTexture.value = object.userData.cubeText;
                         }
@@ -390,7 +400,23 @@
 
                         let curDistance = camera.position.distanceTo(position);
 
+                        if(camera.quaternion.y*quat.y<0){
+                            quat.x = -quat.x;
+                            quat.y = -quat.y;
+                            quat.z = -quat.z;
+                            quat.w = -quat.w;
+                        }
 
+                   new TWEEN.Tween(camera.quaternion)
+                       .to({
+                           x:quat.x,
+                           y:quat.y,
+                           z:quat.z,
+                           w:quat.w
+
+                       },666)
+                       .easing(TWEEN.Easing.Linear.None)
+                       .delay(500).start();
 
                     new TWEEN.Tween(camera.position)
                         .to({
@@ -399,9 +425,6 @@
                             z:position.z
                         },2000)
                         .easing(TWEEN.Easing.Linear.None)
-                        .onStart(function () {
-
-                        })
                         .onUpdate(function (xhr) {
 
 
