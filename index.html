@@ -132,9 +132,12 @@
             path + 'nz (8)' + format, path + 'pz (8)' + format
         ];
 
-        var cubeText1 = new THREE.CubeTextureLoader().load( urls)
+ /*       var cubeText1 = new THREE.CubeTextureLoader().load( urls)
         var cubeText2 = new THREE.CubeTextureLoader().load( urls1 )
-        var cubeText3 = new THREE.CubeTextureLoader().load( urls2 )
+        var cubeText3 = new THREE.CubeTextureLoader().load( urls2 ) */
+        var cubeText1 = ''
+        var cubeText2 = ''
+        var cubeText3 = ''
         var cubeText4 = new THREE.CubeTextureLoader().load( urls3 )
         var cubeText5 = new THREE.CubeTextureLoader().load( urls4 )
         var cubeText6 = new THREE.CubeTextureLoader().load( urls5 )
@@ -513,6 +516,152 @@
 
         })
 
+        document.getElementById('WebGL-output').addEventListener('touchstart',(event)=>{
+
+            var raycaster = new THREE.Raycaster();
+            var mouse = new THREE.Vector2();
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+            // 通过摄像机和鼠标位置更新射线
+            raycaster.setFromCamera( mouse, camera );
+
+            // 计算物体和射线的焦点
+            var intersects = raycaster.intersectObjects( textInfoGroup.children );
+
+            if(intersects.length > 0)
+            {
+
+                if(intersects[0].object.material.visible)
+                {
+
+                    let mat4 = new THREE.Matrix4();
+
+                    let quat = new THREE.Quaternion();
+
+                    let num = intersects[0].object.userData.num;
+
+                    let position = intersects[0].object.userData.position;
+
+                    let object = intersects[0].object;
+
+                    mat4.lookAt(camera.position,position,new THREE.Vector3(0,1,0));
+
+                    quat.setFromRotationMatrix(mat4);
+
+
+                    if(curBox=='cube')
+                    {
+                        cube2.material.uniforms.U_MainTexture.value = object.userData.cubeText;
+                    }else {
+                        cube.material.uniforms.U_MainTexture.value = object.userData.cubeText;
+                    }
+
+                    //
+                    object.visible = false;
+
+                    let curDistance = camera.position.distanceTo(position);
+
+                    if(camera.quaternion.y*quat.y<0){
+                        quat.x = -quat.x;
+                        quat.y = -quat.y;
+                        quat.z = -quat.z;
+                        quat.w = -quat.w;
+                    }
+
+                    new TWEEN.Tween(camera.quaternion)
+                        .to({
+                            x:quat.x,
+                            y:quat.y,
+                            z:quat.z,
+                            w:quat.w
+
+                        },666)
+                        .easing(TWEEN.Easing.Linear.None)
+                        .delay(300).start();
+
+                    new TWEEN.Tween(camera.position)
+                        .to({
+                            x:position.x,
+                            y:position.y,
+                            z:position.z
+                        },2000)
+                        .easing(TWEEN.Easing.Linear.None)
+                        .onUpdate(function (xhr) {
+
+
+                            let distance = camera.position.distanceTo(position)
+                            control.target.set(xhr.x+camera.getWorldDirection(vec3).x/1000000.0,xhr.y+camera.getWorldDirection(vec3).y/1000000.0,xhr.z+camera.getWorldDirection(vec3).z/1000000.0);
+
+                            if(distance<2)
+                            {
+                                cube.position.set(xhr.x,xhr.y,xhr.z);
+                                cube2.position.set(xhr.x,xhr.y,xhr.z);
+                                camera.fov  =50 ;
+                                camera.updateProjectionMatrix();
+
+                                if(curBox !== 'cube')
+                                {
+                                    cube.material.uniforms.alpha.value = (curDistance-distance )/curDistance;
+                                    cube2.material.uniforms.alpha.value = 1.0 - ((curDistance-distance  )/curDistance) ;
+                                }else {
+                                    cube2.material.uniforms.alpha.value = (curDistance-distance )/curDistance;
+                                    cube.material.uniforms.alpha.value = 1.0 - ((curDistance-distance  )/curDistance) ;
+                                }
+
+                            }else
+                            {
+                                camera.fov  =-25*(curDistance-distance) +50;
+                                camera.updateProjectionMatrix();
+
+                            }
+                            if(curBox === 'cube')
+                                cube2.position.set(xhr.x,xhr.y,xhr.z);
+                            else
+                                cube.position.set(xhr.x,xhr.y,xhr.z);
+                        })
+                        .onComplete( function () {
+
+                                if(curBox === 'cube')
+                                {
+                                    curBox = 'cube2'
+                                }else
+                                {
+                                    curBox = 'cube';
+                                }
+
+                                historyPos = curPos;
+
+                                curPos = num;
+
+                                if(historyPos>4&&historyPos<9)
+                                {
+                                    textInfoGroup.children[historyPos-5].visible =false;
+                                    textInfoGroup.children[historyPos-3].visible =false;
+                                }
+                                if(curPos>4&&curPos<9)
+                                {
+                                    textInfoGroup.children[curPos-5].visible =true;
+                                    textInfoGroup.children[curPos-3].visible =true;
+                                    textInfoGroup.children[curPos-5].lookAt(camera.position.x,camera.position.y,camera.position.z);
+                                    textInfoGroup.children[curPos-3].lookAt(camera.position.x,camera.position.y,camera.position.z);
+
+                                }
+
+                                if( curPos ==4 )
+                                {
+                                    textInfoGroup.children[1].visible =true;
+                                    textInfoGroup.children[1].lookAt(camera.position.x,camera.position.y,camera.position.z);
+                                }
+
+                            }
+                        ).delay(300).start()
+                }
+
+
+            }
+
+
+        })
 
     }
 
