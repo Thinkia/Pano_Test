@@ -100,6 +100,17 @@
             path + 'py (4)' + format, path + 'ny (4)' + format,
             path + 'nz (4)' + format, path + 'pz (4)' + format
         ];
+/*
+        var urls4 = [
+            path + '001_3' + format, path + '001_5' + format,
+            path + '001_1' + format, path + '001_6' + format,
+            path + '001_4' + format, path + '001_2' + format
+        ];
+        var urls5 = [
+            path + '4r' + format, path + '4l' + format,
+            path + '4u' + format, path + '4d' + format,
+            path + '4f' + format, path + '4b' + format
+        ];*/
         var urls5 = [
             path + 'nx (5)' + format, path + 'px (5)' + format,
             path + 'py (5)' + format, path + 'ny (5)' + format,
@@ -113,7 +124,7 @@
         var urls7 = [
             path + 'nx (7)' + format, path + 'px (7)' + format,
             path + 'py (7)' + format, path + 'ny (7)' + format,
-            path + 'nz (7)' + format, path + 'pz (7)' + format
+            path + 'nz (7)' + format, path + 'pz (7)' + format,
         ];
         var urls8 = [
             path + 'nx (8)' + format, path + 'px (8)' + format,
@@ -241,7 +252,7 @@
         control = new THREE.OrbitControls(camera);
 
         control.rotateSpeed = -1;
-        control.target.set(-0.99999999,0,0);
+        control.target.set(-0.9999999999,0,0);
 
 
         var cubeGeo = new THREE.CubeGeometry(10, 10, 10);
@@ -416,7 +427,7 @@
 
                        },666)
                        .easing(TWEEN.Easing.Linear.None)
-                       .delay(500).start();
+                       .delay(300).start();
 
                     new TWEEN.Tween(camera.position)
                         .to({
@@ -429,7 +440,7 @@
 
 
                             let distance = camera.position.distanceTo(position)
-                            control.target.set(xhr.x+camera.getWorldDirection(vec3).x,xhr.y+camera.getWorldDirection(vec3).y,xhr.z+camera.getWorldDirection(vec3).z);
+                            control.target.set(xhr.x+camera.getWorldDirection(vec3).x/1000000.0,xhr.y+camera.getWorldDirection(vec3).y/1000000.0,xhr.z+camera.getWorldDirection(vec3).z/1000000.0);
 
                             if(distance<2)
                             {
@@ -484,13 +495,16 @@
                                     textInfoGroup.children[curPos-5].lookAt(camera.position.x,camera.position.y,camera.position.z);
                                     textInfoGroup.children[curPos-3].lookAt(camera.position.x,camera.position.y,camera.position.z);
 
-
-
                                 }
 
+                                if( curPos ==4 )
+                                {
+                                    textInfoGroup.children[1].visible =true;
+                                    textInfoGroup.children[1].lookAt(camera.position.x,camera.position.y,camera.position.z);
+                                }
 
                             }
-                        ).delay(500).start()
+                        ).delay(300).start()
                 }
 
 
